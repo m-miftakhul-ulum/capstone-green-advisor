@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlantController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('plants', [PlantController::class, 'plants']);
+Route::middleware('auth:api')->prefix('v1')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('plants', [PlantController::class, 'plants']);
+    Route::delete('logout', [AuthController::class, 'logout']);
+});
+
+Route::post('register', [AuthController::class, 'register']);
